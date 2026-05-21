@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>G3 – Vesti il Lavoratore</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #e65100 0%, #bf360c 100%);
+            min-height: 100vh;
+            padding: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            width: 800px;
+            height: 550px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #e65100 0%, #bf360c 100%);
+            color: white;
+            padding: 15px 20px;
+            text-align: center;
+            border-radius: 15px 15px 0 0;
+            flex-shrink: 0;
+        }
+
+        .header h1 {
+            font-size: 1.8em;
+            margin-bottom: 5px;
+        }
+
+        .header p {
+            font-size: 0.9em;
+        }
+
+        .content {
+            padding: 15px;
+            flex: 1;
+            overflow-y: auto;
+        }
+
+        .intro-screen {
+            text-align: center;
+            padding: 10px;
+        }
+
+        .intro-screen h2 {
+            color: #e65100;
+            margin-bottom: 10px;
+            font-size: 1.5em;
+        }
+
+        .intro-screen p {
+            font-size: 0.95em;
+            line-height: 1.5;
+            color: #495057;
+            margin-bottom: 10px;
+        }
+
+        .instructions {
+            background: #fff3e0;
+            border-left: 4px solid #e65100;
+            padding: 12px;
+            margin: 15px auto;
+            border-radius: 8px;
+            max-width: 700px;
+            text-align: left;
+        }
+
+        .instructions h3 {
+            color: #e65100;
+            margin-bottom: 8px;
+            font-size: 1.1em;
+        }
+
+        .instructions ul {
+            list-style-position: inside;
+            line-height: 1.6;
+            font-size: 0.9em;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #e65100 0%, #bf360c 100%);
+            color: white;
+            border: none;
+            padding: 10px 30px;
+            font-size: 1em;
+            border-radius: 50px;
+            cursor: pointer;
+            margin: 8px;
+            transition: transform 0.2s;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(230, 81, 0, 0.3);
+        }
+
+        .game-area {
+            display: flex;
+            gap: 10px;
+            height: 100%;
+        }
+
+        .dpi-column {
+            width: 180px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .operator-area {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .scenario-title {
+            background: #f8f9fa;
+            padding: 10px;
+            border-radius: 8px;
+            text-align: center;
+            margin-bottom: 10px;
+            width: 100%;
+        }
+
+        .scenario-title h3 {
+            color: #e65100;
+            font-size: 1.2em;
+            margin-bottom: 5px;
+        }
+
+        .scenario-title p {
+            color: #6c757d;
+            font-size: 0.85em;
+        }
+
+        .operator-figure {
+            position: relative;
+            width: 250px;
+            height: 330px;
+            background: #f0f0f0;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 10px 0;
+            overflow: hidden;
+        }
+
+        .operator-figure img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        .drop-zones {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+        }
+
+        .drop-zone {
+            position: absolute;
+            background: rgba(230, 81, 0, 0.1);
+            border: 2px dashed #e65100;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.15em;
+            transition: all 0.3s;
+        }
+
+        .drop-zone.highlight {
+            background: rgba(230, 81, 0, 0.3);
+            border-color: #bf360c;
+        }
+
+        .drop-zone.filled {
+            background: rgba(40, 167, 69, 0.2);
+            border-color: #28a745;
+            border-style: solid;
+        }
+
+        .drop-zone-head {
+            top: 0%;
+            left: 39%;
+            width: 21%;
+            height: 4%;
+        }
+
+        .drop-zone-eyes {
+            top: 5%;
+            left: 39%;
+            width: 21%;
+            height: 4%;
+        }
+
+        .drop-zone-ears {
+            top: 7%;
+            left: 30%;
+            width: 12%;
+            height: 8%;
+        }
+
+        .drop-zone-torso {
+            top: 18%;
+            left: 38%;
+            width: 27%;
+            height: 27%;
+        }
+
+        .drop-zone-hands {
+            top: 42%;
+            left: 67%;
+            width: 18%;
+            height: 16%;
+        }
+
+        .drop-zone-body {
+            top: 18%;
+            left: 8%;
+            width: 22%;
+            height: 65%;
+        }
+
+        .drop-zone-legs {
+            top: 47%;
+            left: 34%;
+            width: 35%;
+            height: 40%;
+        }
+
+        .drop-zone-feet {
+            top: 90%;
+            left: 28%;
+            width: 44%;
+            height: 10%;
+        }
+
+        .dpi-item {
+            background: white;
+            border: 2px solid #dee2e6;
+            border-radius: 8px;
+            padding: 12px;
+            text-align: center;
+            cursor: move;
+            transition: all 0.3s;
+            user-select: none;
+        }
+
+        .dpi-item:hover {
+            transform: scale(1.05);
+            border-color: #e65100;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .dpi-item.used {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+
+        .dpi-item.used:hover {
+            transform: none;
+        }
+
+        .dpi-icon {
+            font-size: 2em;
+            margin-bottom: 5px;
+        }
+
+        .dpi-name {
+            font-size: 0.85em;
+            font-weight: 600;
+            color: #495057;
+        }
+
+        .verify-btn-container {
+            text-align: center;
+            margin-top: 10px;
+        }
+
+        .results-screen {
+            text-align: center;
+            padding: 15px 10px;
+        }
+
+        .results-screen h2 {
+            color: #e65100;
+            font-size: 1.8em;
+            margin-bottom: 15px;
+        }
+
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin: 15px 0;
+        }
+
+        .result-card {
+            background: linear-gradient(135deg, #e65100 0%, #bf360c 100%);
+            color: white;
+            padding: 15px;
+            border-radius: 12px;
+        }
+
+        .result-value {
+            font-size: 2em;
+            font-weight: bold;
+            margin: 5px 0;
+        }
+
+        .result-label {
+            font-size: 0.9em;
+            opacity: 0.9;
+        }
+
+        .feedback {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            max-width: 400px;
+            z-index: 1000;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(400px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        .feedback.success { border-left: 5px solid #28a745; }
+        .feedback.error { border-left: 5px solid #dc3545; }
+
+        .placed-dpi {
+            position: absolute;
+            font-size: 2.5em;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header" id="header">
+            <h1>🦺 Vesti il Lavoratore</h1>
+            <p>Corso Base Lavoratori · Moduli 8 e 9 – Obblighi dei Lavoratori e RLS</p>
+        </div>
+
+        <div class="content" id="content">
+            <!-- Content will be inserted here -->
+        </div>
+    </div>
+
+    <script>
+        const game = {
+            currentScenario: 0,
+            score: 0,
+            placedDPI: {},
+            draggedItem: null
+        };
+
+        const scenarios = [
+            {
+                id: 1,
+                title: '🏗️ Cantiere Edile – Lavori in Quota',
+                description: 'Operaio su ponteggio a 5 metri: seleziona i DPI obbligatori',
+                requiredDPI: {
+                    head: 'casco',
+                    torso: 'imbracatura',
+                    hands: 'guanti-lavoro',
+                    feet: 'scarpe-s3'
+                }
+            },
+            {
+                id: 2,
+                title: '🏭 Reparto Chimico – Uso Solventi',
+                description: 'Operatore verniciatura con solventi organici: seleziona i DPI obbligatori',
+                requiredDPI: {
+                    head: 'maschera',
+                    eyes: 'occhiali',
+                    torso: 'tuta',
+                    hands: 'guanti-nitrile'
+                }
+            },
+            {
+                id: 3,
+                title: '🔧 Officina Meccanica – Tornio',
+                description: 'Tornitore su macchina utensile: seleziona i DPI obbligatori',
+                requiredDPI: {
+                    eyes: 'occhiali',
+                    ears: 'inserti',
+                    feet: 'scarpe-s3',
+                    body: 'tuta-lavoro'
+                }
+            }
+        ];
+
+        const dpiDatabase = {
+            'casco':         { name: 'Casco di protezione',      icon: '🪖', zone: 'head'  },
+            'imbracatura':   { name: 'Imbracatura anticaduta',   icon: '🦺', zone: 'torso' },
+            'guanti-lavoro': { name: 'Guanti da lavoro',         icon: '🧤', zone: 'hands' },
+            'scarpe-s3':     { name: 'Scarpe antinfort. S3',     icon: '🥾', zone: 'feet'  },
+            'maschera':      { name: 'Maschera filtro A2',       icon: '😷', zone: 'head'  },
+            'occhiali':      { name: 'Occhiali protettivi',      icon: '🥽', zone: 'eyes'  },
+            'tuta':          { name: 'Tuta monouso Tyvek',       icon: '👔', zone: 'torso' },
+            'guanti-nitrile':{ name: 'Guanti in nitrile',        icon: '🧤', zone: 'hands' },
+            'inserti':       { name: 'Inserti auricolari',       icon: '🎧', zone: 'ears'  },
+            'tuta-lavoro':   { name: 'Tuta da lavoro',           icon: '👔', zone: 'body'  },
+            'gilet':         { name: 'Gilet alta visibilità',    icon: '🦺', zone: 'body'  },
+            'cintura':       { name: 'Cintura lombare',          icon: '🔗', zone: 'torso' },
+            'cuffie':        { name: 'Cuffie antirumore',        icon: '🎧', zone: 'ears'  },
+            'visiera':       { name: 'Visiera facciale',         icon: '🥽', zone: 'eyes'  },
+            'stivali':       { name: 'Stivali impermeabili',     icon: '🥾', zone: 'feet'  },
+            'cappello':      { name: 'Cappello solare',          icon: '🧢', zone: 'head'  }
+        };
+
+        function init() {
+            renderIntro();
+        }
+
+        function renderIntro() {
+            const content = document.getElementById('content');
+            document.getElementById('header').style.display = 'block';
+
+            content.innerHTML = `
+                <div class="intro-screen">
+                    <h2>🎯 Vesti il Lavoratore in Sicurezza!</h2>
+                    <p>Il lavoratore ha l'obbligo di indossare i DPI assegnati (Art. 20, lett. d, D.Lgs. 81/08).<br>
+                    Trascina i DPI corretti sull'omino per proteggerlo nello scenario indicato.</p>
+                    <p>Dovrai gestire <strong>3 scenari</strong> lavorativi diversi.</p>
+
+                    <div class="instructions">
+                        <h3>📋 Come Giocare</h3>
+                        <ul>
+                            <li>Trascina i DPI dalle colonne laterali sull'omino centrale</li>
+                            <li>Posiziona ogni DPI nella zona corretta del corpo</li>
+                            <li>Non tutti i DPI disponibili sono obbligatori per lo scenario</li>
+                            <li>+10 punti per DPI corretto, -5 per DPI errato o in zona sbagliata</li>
+                            <li>Bonus +30 per scenario perfetto!</li>
+                        </ul>
+                    </div>
+
+                    <button class="btn" onclick="startGame()">🚀 Inizia il Gioco</button>
+                </div>
+            `;
+        }
+
+        function startGame() {
+            document.getElementById('header').style.display = 'none';
+            game.placedDPI = {};
+            game.currentScenario = 0;
+            game.score = 0;
+            renderScenario();
+        }
+
+        function renderScenario() {
+            const scenario = scenarios[game.currentScenario];
+            const content = document.getElementById('content');
+
+            const requiredDPIIds = Object.values(scenario.requiredDPI);
+
+            // Build available DPI: all required + some distractors
+            const distractors = Object.keys(dpiDatabase).filter(id => !requiredDPIIds.includes(id));
+            const shuffledDistractors = distractors.sort(() => Math.random() - 0.5).slice(0, 4);
+            const availableDPI = [...requiredDPIIds, ...shuffledDistractors].sort(() => Math.random() - 0.5).slice(0, 8);
+
+            const leftDPI  = availableDPI.slice(0, 4);
+            const rightDPI = availableDPI.slice(4, 8);
+
+            let leftHTML = '';
+            leftDPI.forEach(id => {
+                const dpi = dpiDatabase[id];
+                if (!dpi) return;
+                const isUsed = game.placedDPI[dpi.zone] === id;
+                leftHTML += `
+                    <div class="dpi-item ${isUsed ? 'used' : ''}" draggable="${!isUsed}"
+                         data-dpi="${id}"
+                         ondragstart="dragStart(event)">
+                        <div class="dpi-icon">${dpi.icon}</div>
+                        <div class="dpi-name">${dpi.name}</div>
+                    </div>
+                `;
+            });
+
+            let rightHTML = '';
+            rightDPI.forEach(id => {
+                const dpi = dpiDatabase[id];
+                if (!dpi) return;
+                const isUsed = game.placedDPI[dpi.zone] === id;
+                rightHTML += `
+                    <div class="dpi-item ${isUsed ? 'used' : ''}" draggable="${!isUsed}"
+                         data-dpi="${id}"
+                         ondragstart="dragStart(event)">
+                        <div class="dpi-icon">${dpi.icon}</div>
+                        <div class="dpi-name">${dpi.name}</div>
+                    </div>
+                `;
+            });
+
+            let dropZonesHTML = '';
+            const zones = ['head', 'eyes', 'ears', 'torso', 'body', 'hands', 'legs', 'feet'];
+            zones.forEach(zone => {
+                const isFilled = game.placedDPI[zone];
+                const placedDPI = isFilled ? dpiDatabase[game.placedDPI[zone]] : null;
+                dropZonesHTML += `
+                    <div class="drop-zone drop-zone-${zone} ${isFilled ? 'filled' : ''}"
+                         data-zone="${zone}"
+                         ondrop="drop(event)"
+                         ondragover="allowDrop(event)"
+                         ondragenter="dragEnter(event)"
+                         ondragleave="dragLeave(event)">
+                        ${placedDPI ? `<span class="placed-dpi">${placedDPI.icon}</span>` : ''}
+                    </div>
+                `;
+            });
+
+            content.innerHTML = `
+                <div class="game-area">
+                    <div class="dpi-column">
+                        ${leftHTML}
+                    </div>
+
+                    <div class="operator-area">
+                        <div class="scenario-title">
+                            <h3>${scenario.title}</h3>
+                            <p>${scenario.description}</p>
+                        </div>
+
+                        <div class="operator-figure">
+                            <img src="images/corpo umano.jpg" alt="Lavoratore">
+                            <div class="drop-zones">
+                                ${dropZonesHTML}
+                            </div>
+                        </div>
+
+                        <div class="verify-btn-container">
+                            <button class="btn" onclick="verifyScenario()">✅ Verifica DPI</button>
+                        </div>
+                    </div>
+
+                    <div class="dpi-column">
+                        ${rightHTML}
+                    </div>
+                </div>
+            `;
+        }
+
+        function dragStart(e) {
+            const dpiId = e.target.closest('.dpi-item').dataset.dpi;
+            e.dataTransfer.setData('dpi', dpiId);
+            game.draggedItem = dpiId;
+        }
+
+        function allowDrop(e) {
+            e.preventDefault();
+        }
+
+        function dragEnter(e) {
+            e.preventDefault();
+            const zone = e.target.closest('.drop-zone');
+            if (zone && !zone.classList.contains('filled')) {
+                zone.classList.add('highlight');
+            }
+        }
+
+        function dragLeave(e) {
+            const zone = e.target.closest('.drop-zone');
+            if (zone) {
+                zone.classList.remove('highlight');
+            }
+        }
+
+        function drop(e) {
+            e.preventDefault();
+            const zone = e.target.closest('.drop-zone');
+            if (!zone || zone.classList.contains('filled')) return;
+
+            zone.classList.remove('highlight');
+
+            const dpiId = e.dataTransfer.getData('dpi');
+            const dpi = dpiDatabase[dpiId];
+            const zoneName = zone.dataset.zone;
+
+            game.placedDPI[zoneName] = dpiId;
+            renderScenario();
+        }
+
+        function verifyScenario() {
+            const scenario = scenarios[game.currentScenario];
+            let correct = 0;
+            let incorrect = 0;
+            let missing = 0;
+
+            for (const [zone, requiredDPI] of Object.entries(scenario.requiredDPI)) {
+                if (game.placedDPI[zone] === requiredDPI) {
+                    correct++;
+                    game.score += 10;
+                } else if (game.placedDPI[zone]) {
+                    incorrect++;
+                    game.score -= 5;
+                } else {
+                    missing++;
+                }
+            }
+
+            // Penalize wrong DPI placed in zones not required
+            const wrongZones = Object.keys(game.placedDPI).filter(zone =>
+                !scenario.requiredDPI[zone] || game.placedDPI[zone] !== scenario.requiredDPI[zone]
+            ).length;
+
+            if (correct === Object.keys(scenario.requiredDPI).length && wrongZones === 0) {
+                game.score += 30;
+                showFeedback('success', '🎉 Perfetto!', `Hai equipaggiato il lavoratore correttamente! +30 punti bonus! (Art. 20 D.Lgs. 81/08)`);
+            } else {
+                showFeedback('error', '📊 Risultato', `Corretti: ${correct} – Errati: ${incorrect} – Mancanti: ${missing}. Riprova nello scenario successivo.`);
+            }
+
+            setTimeout(() => {
+                game.placedDPI = {};
+                game.currentScenario++;
+
+                if (game.currentScenario < scenarios.length) {
+                    renderScenario();
+                } else {
+                    endGame();
+                }
+            }, 2500);
+        }
+
+        function showFeedback(type, title, message) {
+            const feedback = document.createElement('div');
+            feedback.className = `feedback ${type}`;
+            feedback.innerHTML = `
+                <div style="font-weight: bold; font-size: 1.2em; margin-bottom: 10px;">${title}</div>
+                <div>${message}</div>
+            `;
+            document.body.appendChild(feedback);
+            setTimeout(() => feedback.remove(), 3000);
+        }
+
+        function endGame() {
+            const content = document.getElementById('content');
+            document.getElementById('header').style.display = 'block';
+
+            let performance = '';
+            if (game.score >= 110) {
+                performance = '🏆 Eccellente! Conosci perfettamente i DPI obbligatori per ogni scenario!';
+            } else if (game.score >= 70) {
+                performance = '👍 Molto bene! Buona conoscenza dei DPI lavorativi.';
+            } else if (game.score >= 30) {
+                performance = '✅ Sufficiente. Ripassa quali DPI sono obbligatori per ogni tipo di attività.';
+            } else {
+                performance = '📚 Rileggi gli obblighi dei lavoratori (Art. 20 D.Lgs. 81/08) e riprova!';
+            }
+
+            content.innerHTML = `
+                <div class="results-screen">
+                    <h2>🎮 Gioco Completato!</h2>
+
+                    <div class="results-grid">
+                        <div class="result-card">
+                            <div class="result-label">Punteggio Finale</div>
+                            <div class="result-value">${game.score}</div>
+                        </div>
+                        <div class="result-card">
+                            <div class="result-label">Scenari Completati</div>
+                            <div class="result-value">${scenarios.length}/${scenarios.length}</div>
+                        </div>
+                    </div>
+
+                    <div style="background: #f8f9fa; padding: 15px; border-radius: 10px; margin: 15px 0;">
+                        <h3 style="color: #e65100; margin-bottom: 10px; font-size: 1.2em;">Valutazione</h3>
+                        <p style="font-size: 1.1em; color: #495057;">${performance}</p>
+                    </div>
+
+                    <button class="btn" onclick="location.reload()">🔄 Gioca Ancora</button>
+                </div>
+            `;
+        }
+
+        window.onload = init;
+    </script>
+</body>
+</html>
